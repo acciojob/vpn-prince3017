@@ -25,7 +25,7 @@ public class ConnectionServiceImpl implements ConnectionService {
 
         if(user.getMaskedIp()!=null)
             throw new Exception("Already connected");
-        else if (countryName.equalsIgnoreCase(user.getOriCountry().getCountryName().toString())) {
+        else if (countryName.equalsIgnoreCase(user.getOriginalCountry().getCountryName().toString())) {
             return user;
         } else{
             if(user.getServiceProviderList()==null){
@@ -33,7 +33,7 @@ public class ConnectionServiceImpl implements ConnectionService {
             }
 
             List<ServiceProvider> providers = user.getServiceProviderList();
-            int minii = Integer.MAX_VALUE;
+            int min = Integer.MAX_VALUE;
             ServiceProvider serviceProvider1 = null;
             Country country1 = null;
 
@@ -42,8 +42,8 @@ public class ConnectionServiceImpl implements ConnectionService {
 
                 for (Country country:countryList){
 
-                    if(countryName.equalsIgnoreCase(country.getCountryName().toString()) && minii>serviceProvider.getId()){
-                        minii=serviceProvider.getId();
+                    if(countryName.equalsIgnoreCase(country.getCountryName().toString()) && min>serviceProvider.getId()){
+                        min=serviceProvider.getId();
                         serviceProvider1=serviceProvider;
                         country1=country;
                     }
@@ -76,7 +76,7 @@ public class ConnectionServiceImpl implements ConnectionService {
     @Override
     public User disconnect(int userId) throws Exception {
         User user = userRepository2.findById(userId).get();
-        if(user.isConnected()==false)
+        if(user.getConnected()==false)
             throw new Exception("Already disconnected");
 
         user.setMaskedIp(null);
@@ -95,7 +95,7 @@ public class ConnectionServiceImpl implements ConnectionService {
 
             String code= Ip.substring(0,3);
 
-            if(code.equals(sender.getOriCountry().getCode()))
+            if(code.equals(sender.getOriginalCountry().getCode()))
                 return sender;
             else {
                 String countryName = "";
@@ -119,10 +119,10 @@ public class ConnectionServiceImpl implements ConnectionService {
                 }
             }
         }else{
-            if(receiver.getOriCountry().equals(sender.getOriCountry())){
+            if(receiver.getOriginalCountry().equals(sender.getOriginalCountry())){
                 return sender;
             }else{
-                String countryName = receiver.getOriCountry().getCountryName().toString();
+                String countryName = receiver.getOriginalCountry().getCountryName().toString();
 
                 try{
                     User updatedSender = connect(senderId,countryName);

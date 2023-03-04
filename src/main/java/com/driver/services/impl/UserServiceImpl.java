@@ -23,6 +23,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User register(String username, String password, String countryName) throws Exception{
+        //create a user of given country. The ip of the user should be "countryCode.userId" and return the user.
+        //Note that the userId is created automatically by the repository layer
+
         if(countryName.equalsIgnoreCase("ind") || countryName.equalsIgnoreCase("usa") || countryName.equalsIgnoreCase("aus")||countryName.equalsIgnoreCase("jpn")||countryName.equalsIgnoreCase("chi")) {
 
             User user = new User();
@@ -53,7 +56,7 @@ public class UserServiceImpl implements UserService {
             }
 
             country.setUser(user);
-            user.setOriCountry(country);
+            user.setOriginalCountry(country);
             user.setConnected(false);
 
             String IP = country.getCode() +"."+ userRepository3.save(user).getId();

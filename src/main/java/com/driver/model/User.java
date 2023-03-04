@@ -1,6 +1,5 @@
 package com.driver.model;
 
-
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,22 +11,26 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    private String username;
-    private String password;
-    private String originalIp;
-    private String maskedIp;
-    private boolean connected;
 
+    private String username;
+
+    private String password;
+
+    private String originalIp;
+
+    private String maskedIp;
+
+    private Boolean connected;
 
     @ManyToMany
     @JoinColumn
     private List<ServiceProvider> serviceProviderList = new ArrayList<>();
 
-    @OneToMany
-    private List<Connection>connectionList;
-
-    @OneToOne
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private Country originalCountry;
+
+    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
+    private List<Connection> connectionList;
 
     public User(String username, String password, Country originalCountry) {
         this.username = username;
@@ -78,11 +81,11 @@ public class User {
         this.maskedIp = maskedIp;
     }
 
-    public boolean isConnected() {
+    public Boolean getConnected() {
         return connected;
     }
 
-    public void setConnected(boolean connected) {
+    public void setConnected(Boolean connected) {
         this.connected = connected;
     }
 
@@ -94,19 +97,19 @@ public class User {
         this.serviceProviderList = serviceProviderList;
     }
 
+    public Country getOriginalCountry() {
+        return originalCountry;
+    }
+
+    public void setOriginalCountry(Country originalCountry) {
+        this.originalCountry = originalCountry;
+    }
+
     public List<Connection> getConnectionList() {
         return connectionList;
     }
 
     public void setConnectionList(List<Connection> connectionList) {
         this.connectionList = connectionList;
-    }
-
-    public Country getOriCountry() {
-        return originalCountry;
-    }
-
-    public void setOriCountry(Country oriCountry) {
-        this.originalCountry = oriCountry;
     }
 }
