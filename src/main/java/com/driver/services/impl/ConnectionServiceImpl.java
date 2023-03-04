@@ -21,6 +21,8 @@ public class ConnectionServiceImpl implements ConnectionService {
 
     @Override
     public User connect(int userId, String countryName) throws Exception{
+        User user = userRepository2.findById(userId).get();
+
 
     }
     @Override
